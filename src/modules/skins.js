@@ -6,3 +6,7 @@ export const SKINS = [
   { id: 'white', name: '白猫', image: './assets/白猫.png', happyImage: './assets/白猫成功.png', sadImage: './assets/白猫失败.png' , unlockCost: 2000},
   { id: 'black', name: '黑猫', image: './assets/黑猫.png', happyImage: './assets/黑猫成功.png', sadImage: './assets/黑猫失败.png' , unlockCost: 2000}
 ];
+
+export function getAllSkins() {
+  return SKINS;
+}

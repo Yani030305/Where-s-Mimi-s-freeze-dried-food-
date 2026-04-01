@@ -8,6 +8,7 @@ export class GameState {
 
   reset() {
     this.levelIndex = this.defaults.levelIndex ?? 0;
+    this.maxUnlockedLevelIndex = this.defaults.levelIndex ?? 0;
     this.coins = this.defaults.coins ?? 0;
     this.selectedSkinId = this.defaults.selectedSkinId ?? 'cow';
     this.unlockedSkinIds = ['cow'];
@@ -21,6 +22,7 @@ export class GameState {
 
       const data = JSON.parse(raw);
       this.levelIndex = data.levelIndex ?? this.defaults.levelIndex ?? 0;
+      this.maxUnlockedLevelIndex = data.maxUnlockedLevelIndex ?? this.levelIndex;
       this.coins = data.coins ?? this.defaults.coins ?? 0;
       this.selectedSkinId = data.selectedSkinId ?? this.defaults.selectedSkinId ?? 'cow';
       this.unlockedSkinIds = Array.isArray(data.unlockedSkinIds) ? data.unlockedSkinIds : ['cow'];
@@ -36,9 +38,17 @@ export class GameState {
   save() {
     localStorage.setItem(STORAGE_KEY, JSON.stringify({
       levelIndex: this.levelIndex,
+      maxUnlockedLevelIndex: this.maxUnlockedLevelIndex,
       coins: this.coins,
       selectedSkinId: this.selectedSkinId,
       unlockedSkinIds: this.unlockedSkinIds,
     }));
+  }
+
+  unlockLevel(levelIndex) {
+    if (levelIndex > this.maxUnlockedLevelIndex) {
+      this.maxUnlockedLevelIndex = levelIndex;
+      this.save();
+    }
   }
 }

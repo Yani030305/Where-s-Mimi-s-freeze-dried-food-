@@ -15,6 +15,7 @@ state.load();
 const screens = {
   home: document.getElementById('home-screen'),
   skins: document.getElementById('skin-screen'),
+  level: document.getElementById('level-screen'),
   game: document.getElementById('game-screen'),
 };
 
@@ -28,6 +29,8 @@ const skinPreviewCat = document.getElementById('skin-preview-cat');
 const skinPreviewName = document.getElementById('skin-preview-name');
 const skinList = document.getElementById('skin-list');
 
+const levelGrid = document.getElementById('level-grid');
+
 const levelLabel = document.getElementById('level-label');
 const coinLabel = document.getElementById('coin-label');
 const attemptLabel = document.getElementById('attempt-label');
@@ -40,6 +43,7 @@ const resultTitle = document.getElementById('result-title');
 const resultDesc = document.getElementById('result-desc');
 const nextLevelBtn = document.getElementById('next-level-btn');
 const retryBtn = document.getElementById('retry-btn');
+const modalLevelMapBtn = document.getElementById('modal-level-map-btn');
 const modalHomeBtn = document.getElementById('modal-home-btn');
 
 let runtime = null;
@@ -55,6 +59,16 @@ document.getElementById('skins-btn').addEventListener('click', () => {
   switchScreen('skins');
 });
 
+document.getElementById('level-map-btn').addEventListener('click', () => {
+  audioManager.play('button');
+  switchScreen('level');
+});
+
+document.getElementById('back-home-from-levels').addEventListener('click', () => {
+  audioManager.play('button');
+  switchScreen('home');
+});
+
 document.getElementById('reset-btn').addEventListener('click', () => {
   audioManager.play('button');
   if (!confirm('确认重置关卡与金币？')) return;
@@ -62,6 +76,7 @@ document.getElementById('reset-btn').addEventListener('click', () => {
   state.reset();
   renderHome();
   renderSkins();
+  renderLevelMap();
 });
 
 document.getElementById('back-home-from-skins').addEventListener('click', () => {
@@ -107,12 +122,20 @@ modalHomeBtn.addEventListener('click', () => {
   switchScreen('home');
 });
 
+modalLevelMapBtn.addEventListener('click', () => {
+  audioManager.play('button');
+  hideResultModal();
+  clearGuessCountdown();
+  switchScreen('level');
+});
+
 function switchScreen(name) {
   Object.values(screens).forEach(el => el.classList.remove('active'));
   screens[name].classList.add('active');
 
   if (name === 'home') renderHome();
   if (name === 'skins') renderSkins();
+  if (name === 'level') renderLevelMap();
 }
 
 function renderHome() {
@@ -204,6 +227,32 @@ function renderSkins() {
     });
 
     skinList.appendChild(card);
+  });
+}
+
+function renderLevelMap() {
+  levelGrid.innerHTML = '';
+
+  LEVELS.forEach((level, index) => {
+    const isUnlocked = index <= state.maxUnlockedLevelIndex;
+    const isCurrent = index === state.levelIndex;
+
+    const card = document.createElement('div');
+    card.className = 'level-card';
+    card.classList.add(isUnlocked ? 'unlocked' : 'locked');
+    if (isCurrent) card.classList.add('current');
+    card.textContent = String(level.id);
+
+    if (isUnlocked) {
+      card.addEventListener('click', () => {
+        audioManager.play('button');
+        state.levelIndex = index;
+        state.save();
+        startCurrentLevel();
+      });
+    }
+
+    levelGrid.appendChild(card);
   });
 }
 
@@ -525,6 +574,7 @@ async function onGuess(hand) {
     const reward = getReward(runtime.attempt);
     state.coins += reward;
     coinLabel.textContent = String(state.coins);
+    state.unlockLevel(state.levelIndex + 1);
     state.save();
 
     countdownLabel.textContent = '';
