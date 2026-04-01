@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>咪的冻干呢！ - V0 原型</title>
+  <link rel="stylesheet" href="./src/styles.css" />
+</head>
+<body>
+  <div id="app">
+    <div class="screen active" id="home-screen">
+      <div class="panel home-panel">
+        <div class="title-wrap">
+          <h1>咪的冻干呢！</h1>
+          <p>V0 原型 · 直接用 VS Code 打开即可改</p>
+        </div>
+
+        <div class="home-preview only-cat">
+          <div class="mini-cat" id="home-cat"></div>
+        </div>
+
+        <div class="home-actions">
+          <button id="start-btn" class="primary-btn">开始游戏</button>
+          <button id="skins-btn" class="secondary-btn">选择猫咪皮肤</button>
+          <button id="reset-btn" class="ghost-btn">重置存档</button>
+        </div>
+
+        <div class="home-info">
+          <div>当前关卡：<span id="home-level">1</span></div>
+          <div>金币：<span id="home-coins">0</span></div>
+          <div>已装备：<span id="home-skin-name">奶牛猫</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="screen" id="skin-screen">
+      <div class="panel skin-panel">
+        <div class="toolbar">
+          <button id="back-home-from-skins" class="ghost-btn">返回</button>
+          <h2>猫咪皮肤</h2>
+          <div class="toolbar-gap"></div>
+        </div>
+
+        <div class="skin-preview">
+          <div id="skin-preview-cat" class="big-cat">🐄</div>
+          <div id="skin-preview-name" class="skin-name">奶牛猫</div>
+        </div>
+
+        <div id="skin-list" class="skin-list"></div>
+      </div>
+    </div>
+
+    <div class="screen" id="game-screen">
+      <div class="game-shell">
+        <div class="top-bar">
+          <div>关卡 <span id="level-label">1</span></div>
+          <div>金币 <span id="coin-label">0</span></div>
+          <div>剩余尝试 <span id="attempt-label">4</span></div>
+        </div>
+
+        <div class="hint-bar">
+          <span id="message-label">记住哪只手里有冻干</span>
+          <span id="countdown-label"></span>
+        </div>
+
+        <div id="arena" class="arena">
+          <div id="hands-container" class="hands-container"></div>
+          <div id="cat-avatar" class="cat-avatar">
+            <img id="cat-avatar-img" src="./assets/奶牛猫.png" alt="cat" />
+          </div>
+        </div>
+
+        <div class="bottom-bar">
+          <button id="back-home-from-game" class="ghost-btn">返回首页</button>
+          <button id="restart-level" class="secondary-btn">重开本关</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="result-modal" class="modal hidden">
+      <div class="modal-card">
+        <h3 id="result-title">通关成功</h3>
+        <p id="result-desc"></p>
+        <div class="result-actions">
+          <button id="next-level-btn" class="primary-btn">下一关</button>
+          <button id="retry-btn" class="secondary-btn">重试</button>
+          <button id="modal-home-btn" class="ghost-btn">回首页</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="./src/main.js"></script>
+</body>
+</html>
